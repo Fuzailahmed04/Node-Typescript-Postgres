@@ -1,4 +1,3 @@
-// src/models/userModel.ts
 
 export interface User {
     id: number;
@@ -8,7 +7,6 @@ export interface User {
     updatedAt: Date;
   }
   
-  // Function to map the query result to a User object
   export const mapUser = (row: any): User => {
     return {
       id: row.id,

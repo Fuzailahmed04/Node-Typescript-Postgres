@@ -2,8 +2,8 @@ import { User, mapUser } from '../models/userModels';
 import client from '../database/database';
 
 export const getUsers = async (): Promise<User[]> => {
-  const result = await client.query('SELECT * FROM "users"');  // Corrected the table name to match case sensitivity
-  return result.rows.map(mapUser); // Map the rows to User objects
+  const result = await client.query('SELECT * FROM "users"')
+  return result.rows.map(mapUser); 
 };
 
 export const createUser = async (name: string, email: string): Promise<User> => {
