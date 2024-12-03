@@ -1,18 +1,15 @@
-// src/services/userService.ts
 import { User, mapUser } from '../models/userModels';
 import client from '../database/database';
 
-// Fetch all users from the database
 export const getUsers = async (): Promise<User[]> => {
-  const result = await client.query('SELECT * FROM User');
+  const result = await client.query('SELECT * FROM "users"');  // Corrected the table name to match case sensitivity
   return result.rows.map(mapUser); // Map the rows to User objects
 };
 
-// Create a new user in the database
 export const createUser = async (name: string, email: string): Promise<User> => {
   const result = await client.query(
-    'INSERT INTO users(name, email, created_at, updated_at) VALUES($1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *',
+    'INSERT INTO "users" (name, email, created_at, updated_at) VALUES ($1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *', 
     [name, email]
   );
-  return mapUser(result.rows[0]); // Return the mapped User object
+  return mapUser(result.rows[0]);  // Map the result to a User object
 };

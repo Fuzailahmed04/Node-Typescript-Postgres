@@ -1,18 +1,22 @@
 import { Client } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const client = new Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || '5433'),
+  user: 'postgres', 
+  host: 'localhost',
+  database: 'BillingApp', 
+  password: '123456', 
+  port: 5433,
 });
 
-client.connect()
-  .then(() => console.log('Connected to PostgreSQL'))
-  .catch((err) => console.error('Connection error', err.stack));
+async function connectToDB() {
+  try {
+    await client.connect();
+    console.log('Connected to PostgreSQL');
+  } catch (err: any) {
+    console.error('Connection error:', err.message || err.stack);
+  }
+}
+
+connectToDB();
 
 export default client;
