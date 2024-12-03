@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react",   // Or "react-jsx" for React 17 and later
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["dom", "esnext"]
+  }
+}
