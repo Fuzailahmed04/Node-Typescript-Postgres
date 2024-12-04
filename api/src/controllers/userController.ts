@@ -16,8 +16,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    const { name, email } = req.body;
-    const user = await createUser(name, email);
+    const { username, email } = req.body;
+    const user = await createUser(username, email);
     res.status(201).json(user);
   } catch (err: unknown) {
     if (err instanceof Error) {

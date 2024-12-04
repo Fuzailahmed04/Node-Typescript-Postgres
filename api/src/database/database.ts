@@ -3,9 +3,9 @@ import { Client } from 'pg';
 const client = new Client({
   user: 'postgres', 
   host: 'localhost',
-  database: 'BillingApp', 
-  password: '123456', 
-  port: 5433,
+  database: 'postgres', 
+  password: 'postgresql', 
+  port: 5432,
 });
 
 async function connectToDB() {
