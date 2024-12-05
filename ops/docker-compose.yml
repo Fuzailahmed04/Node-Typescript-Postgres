@@ -1,1 +1,24 @@
-//containers for database and api
+version: '3'
+services:
+
+  db:
+    image: postgres:13  # Use the official PostgreSQL image
+    container_name: database
+    restart: always
+    ports:
+      - 5432:5432  # Correct port mapping without spaces
+    environment:
+      - POSTGRES_PASSWORD=postgresql  # Set PostgreSQL password
+      - POSTGRES_DB=postgres  # Database name
+      - POSTGRES_USER=postgres  # PostgreSQL user (optional, defaults to "postgres")
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data  # Correct volume mapping
+
+# Uncomment the following lines if you need to declare volumes or networks:
+# volumes:
+#   postgresql:
+#     driver: local
+#
+# networks:
+#   default:
+#     driver: bridge
