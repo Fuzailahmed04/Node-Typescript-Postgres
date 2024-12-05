@@ -1,23 +1,26 @@
-import { User, mapUser } from '../models/userModels';
-import client from '../database/database';
+import client from '../config/config'; // Adjust the database connection
+import bcrypt from 'bcrypt'; // Assuming you're hashing passwords
 
-export const getUsers = async (): Promise<User[]> => {
-  const result = await client.query('SELECT * FROM "users"')
-  return result.rows.map(mapUser); 
-};
+export const signupUser = async (email: string, password: string, username: string) => {
+  try {
+    // Check if the email already exists
+    const result = await client.query('SELECT * FROM "users" WHERE email = $1', [email]);
+    if (result.rows.length > 0) {
+      return null; // Email already in use
+    }
 
-export const createUser = async (username: string, email: string): Promise<User> => {
-  const result = await client.query(
-    'INSERT INTO "users" (username, email, created_at) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING *', 
-    [username, email]
-  );
-  return mapUser(result.rows[0]);  // Map the result to a User object
-};
-export const getUserByEmail = async (email: string) => {
-  const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
-  return result.rows[0]; // Return the first user found, or undefined if no user exists
-};
-export const getUserByUsername = async (username: string) => {
-  const result = await client.query('SELECT * FROM users WHERE username = $1', [username]);
-  return result.rows[0]; // Return the first user found, or undefined if no user exists
+    // Hash the password before saving it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert the new user into the database
+    const newUser = await client.query(
+      'INSERT INTO "users" (username, email, password, created_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP) RETURNING *',
+      [username, email, hashedPassword]
+    );
+
+    return newUser.rows[0]; // Return the newly created user
+  } catch (error) {
+    console.error('Signup error: ', error);
+    throw new Error('Internal Server Error');
+  }
 };

@@ -1,28 +1,24 @@
-import app from './app';
-import client from './database/database';
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+import Fastify from 'fastify'
+import userRoutes from './routes/userRoutes';
+
+
+const fastify = Fastify({
+  logger: true
 });
 
 
-const shutdown = async () => {
-  console.log('Shutting down server...');
-  // clie.close(() => {
-  //   console.log('Server closed');
-  // });
+fastify.register(userRoutes);
 
-  // Close database connections
-  try {
-    await client.end();
-    console.log('Database connection closed');
-  } catch (err) {
-    console.error('Error closing database connection:', err);
+fastify.get('/testing', async ( request: any, reply: any) =>{
+  return{ message : 'Hello Mr Fuzail'};
+}
+);
+
+fastify.listen({ port: 4001, host: '0.0.0.0' }), (err: any,address: any) =>{
+  if(err){
+    fastify.log.error(err);
+    process.exit(1);
   }
-
-  process.exit(0);
+  console.log(`Server is runnning at the ${ address}`);
 };
-
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);

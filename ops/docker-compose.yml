@@ -1,24 +1,29 @@
-version: '3'
+version: '3.8'
 services:
-
   db:
-    image: postgres:13  # Use the official PostgreSQL image
+    image: postgres:13
     container_name: database
     restart: always
     ports:
-      - 5432:5432  # Correct port mapping without spaces
+      - "${DB_PORT}:5432"
     environment:
-      - POSTGRES_PASSWORD=postgresql  # Set PostgreSQL password
-      - POSTGRES_DB=postgres  # Database name
-      - POSTGRES_USER=postgres  # PostgreSQL user (optional, defaults to "postgres")
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./postgresql:/var/lib/postgresql/data  # Correct volume mapping
+      - ./postgresql:/var/lib/postgresql/data
 
-# Uncomment the following lines if you need to declare volumes or networks:
-# volumes:
-#   postgresql:
-#     driver: local
-#
-# networks:
-#   default:
-#     driver: bridge
+  api:
+    build:
+      context: ../api
+    container_name: api_service
+    ports:
+      - "${PORT}:4001"
+    environment:
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_URL: ${DB_URL}
+      NODE_ENV: ${NODE_ENV}
