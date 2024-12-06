@@ -1,29 +1,45 @@
-import { Request, Response } from 'express';
-import { getUsers, createUser } from '../services/userServices';
+// import { FastifyReply, FastifyRequest } from 'fastify';
+// import bcrypt from 'bcrypt';
+// import { User } from '../models/userModels'; // Import the User model
+// import { Sequelize } from 'sequelize';
+// import { Op } from 'sequelize';
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await getUsers();
-    res.status(200).json(users);
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: 'Error fetching users', error: err.message });
-    } else {
-      res.status(500).json({ message: 'Unknown error fetching users' });
-    }
-  }
-};
+// export const registerUser = async (request: FastifyRequest, reply: FastifyReply) => {
+//   const { username, password, email } = request.body as {
+//     username: string;
+//     password: string;
+//     email?: string;
+//   };
 
-export const addUser = async (req: Request, res: Response) => {
-  try {
-    const { username, email } = req.body;
-    const user = await createUser(username, email);
-    res.status(201).json(user);
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: 'Error creating user', error: err.message });
-    } else {
-      res.status(500).json({ message: 'Unknown error creating user' });
-    }
-  }
-};
+//   if (!username || !password) {
+//     return reply.status(400).send({ error: 'Username and password are required.' });
+//   }
+
+//   try {
+//     // Check if the username or email already exists in the database
+//     const existingUser = await User.findOne({
+//       where: {
+//         [Sequelize.Op]: [{ username }]
+//       },
+//     });
+
+//     if (existingUser) {
+//       return reply.status(400).send({ error: 'Username or email already in use.' });
+//     }
+
+//     // Hash the password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Create a new user instance
+//     const user = await User.create({
+//       username,
+//       password: hashedPassword,
+//       email
+//     });
+
+//     reply.status(201).send({ message: 'User registered successfully!' });
+//   } catch (error) {
+//     console.error(error);
+//     reply.status(500).send({ error: 'Error registering user.' });
+//   }
+// };

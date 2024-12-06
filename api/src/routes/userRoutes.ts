@@ -1,11 +1,30 @@
-import { Router } from 'express';
-import { getAllUsers } from '../controllers/userController';
-import { addUser } from '../controllers/userController';
-import { validateRequest } from '../middlewares/validateMiddleware';
-import { userValidationSchemas } from '../validation/user.validation';
+// import { FastifyInstance } from 'fastify';
+// import { registerUser } from '../controllers/userController';
 
-const router = Router();
-
-router.get('/users', getAllUsers);
-router.post('/user', validateRequest(userValidationSchemas.createUser), addUser );
-export default router;
+// // Define a function that registers the routes in the Fastify instance
+// export default async function userRoutes(fastify: FastifyInstance) {
+//   fastify.route({
+//     method: 'POST',
+//     url: '/register',
+//     schema: {
+//       body: {
+//         type: 'object',
+//         properties: {
+//           username: { type: 'string' },
+//           password: { type: 'string' },
+//           email: { type: 'string' }
+//         },
+//         required: ['username', 'password'],
+//       },
+//       response: {
+//         201: {
+//           type: 'object',
+//           properties: {
+//             message: { type: 'string' }
+//           }
+//         }
+//       }
+//     },
+//     handler: registerUser // Use the handler function directly
+//   });
+// }

@@ -1,28 +1,23 @@
-import app from './app';
-import client from './database/database';
-const PORT = process.env.PORT || 3000;
+import Fastify from "fastify";
+import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes";
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+dotenv.config();
+
+const fastify = Fastify({ logger: true });
+
+fastify.get("/", async (request, reply) => {
+  return { hello: "world" };
 });
 
+fastify.register(authRoutes);
 
-const shutdown = async () => {
-  console.log('Shutting down server...');
-  // clie.close(() => {
-  //   console.log('Server closed');
-  // });
-
-  // Close database connections
-  try {
-    await client.end();
-    console.log('Database connection closed');
-  } catch (err) {
-    console.error('Error closing database connection:', err);
+const PORT = parseInt("3000", 10);
+fastify.listen({ port: PORT }, async (err) => {
+  if (err) {
+    fastify.log.error(err);
+    process.exit(1);
   }
 
-  process.exit(0);
-};
-
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+  console.log(`Server listening at http://localhost:${PORT}`);
+});
