@@ -1,12 +1,22 @@
 {
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "compilerOptions": {
+      "resolveJsonModule": true
+    },
+  },
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "strict": true,
+    "module": "CommonJS",
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "sourceMap": true,
+    "outDir": "dist",
+    "paths": {}
   },
   "include": ["src/**/*.ts"]
 }

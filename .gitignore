@@ -2,5 +2,6 @@ node_modules
 logs
 package-lock.json
 build
-.env
+.env-cmdrc
 postgresql
+data-postgres

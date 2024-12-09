@@ -1,29 +1,39 @@
 version: '3.8'
 services:
-  db:
-    image: postgres:13
-    container_name: database
+  bill-payment-db:
+    image: postgres:17
+    container_name: bill-payment-db
     restart: always
     ports:
-      - "${DB_PORT}:5432"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
+      - ./data-postgres:/var/lib/postgresql/data
 
-  api:
+  bill-payment-api:
     build:
-      context: ../api
-    container_name: api_service
+      context: ../
+      dockerfile: ./api/Dockerfile
+    container_name: bill-payment-api
     ports:
-      - "${PORT}:4001"
+      - "${API_PORT}:${API_PORT}"
     environment:
-      DB_USER: ${DB_USER}
-      DB_HOST: ${DB_HOST}
-      DB_NAME: ${DB_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_PORT: ${DB_PORT}
-      DB_URL: ${DB_URL}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_URL: ${DATABASE_URL}
       NODE_ENV: ${NODE_ENV}
+      API_PORT: ${API_PORT}
+    volumes:
+        - ../api/:/api
+
+networks:
+  bill-payment-api:
+    driver: bridge
+  bill-payment-db:
+    driver: bridge
