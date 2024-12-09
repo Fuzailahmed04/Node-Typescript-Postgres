@@ -1,22 +1,32 @@
-import { Client } from 'pg';
+import { Sequelize, Op } from "sequelize";
+import dotenv from "dotenv";
 
-const client = new Client({
-  user: 'postgres', 
-  host: 'localhost',
-  database: 'postgres', 
-  password: 'postgresql', 
-  port: 5432,
-});
+dotenv.config();
+console.log(process.env.DATABASE_NAME);
+
+const sequelize = new Sequelize(
+  process.env.DATABASE_NAME || "postgres",
+  process.env.DATABASE_USER || "admin",
+  process.env.DATABASE_PASS || "postgres",
+  {
+    host: "bill-payment-db",
+    dialect: "postgres",
+  }
+);
 
 async function connectToDB() {
   try {
-    await client.connect();
-    console.log('Connected to PostgreSQL');
-  } catch (err: any) {
-    console.error('Connection error:', err.message || err.stack);
+    await sequelize.authenticate();
+    console.log("Connected to PostgreSQL successfully!");
+  } catch (error: any) {
+    console.error(
+      "Unable to connect to the database:",
+      error.message || error.stack
+    );
+    process.exit(1);
   }
 }
 
 connectToDB();
 
-export default client;
+export { sequelize, Op };
