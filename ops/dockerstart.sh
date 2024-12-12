@@ -9,7 +9,7 @@ else
       CONTAINERS_TO_RUN="-f docker-node.yml"
 fi
 
-echo "THIS IS WHAT IMRAN SAYS IS NNOT HAPPING: ${DATABASE_USER}"
+echo "THIS IS WHAT IMRAN SAYS IS NOT HAPPING: ${DATABASE_USER}"
 
 docker-compose -f docker-node.yml -f docker-postgres.yml down
 

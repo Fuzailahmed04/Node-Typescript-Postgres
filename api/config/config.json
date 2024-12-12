@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "postgres",
+    "database": "api",
+    "host": "bill-payment-db",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "test": {
+    "username": "admin",
+    "password": "postgres",
+    "database": "api_test",
+    "host": "bill-payment-db",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "production": {
+    "username": "admin",
+    "password": "postgres",
+    "database": "api_production",
+    "host": "bill-payment-db",
+    "dialect": "postgres",
+    "port": 5432
+  }
+}

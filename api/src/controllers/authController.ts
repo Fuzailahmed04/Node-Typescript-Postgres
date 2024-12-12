@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User  from "../models/userModels";
+import User from "../../models/User";
 // // import { RedisClientType } from 'redis'; // Assuming you're using Redis for token storage
 
 // Mock Redis client or use your implementation
@@ -23,6 +23,8 @@ export const registerUser = async (
   }
 
   try {
+    console.log("check before first user exist");
+
     const existingUser = await User.findOne({
       where: { email },
     });
@@ -31,12 +33,14 @@ export const registerUser = async (
       return reply.status(400).send({ error: "Email already in use." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    //  const hashedPassword = await bcrypt.hash(password, 10);
+
+    console.log("check before creating new user");
 
     const newUser = await User.create({
       username,
       email,
-      password: hashedPassword,
+      password,
     });
 
     reply
@@ -55,11 +59,11 @@ export const loginUser = async (email: string, password: string) => {
       return { success: false, error: "User not found" };
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-      return { success: false, error: "Invalid password" };
-    }
+    //  if (!isPasswordValid) {
+    // return { success: false, error: "Invalid password" };
+    // }
 
     const token = jwt.sign(
       { id: user.id },

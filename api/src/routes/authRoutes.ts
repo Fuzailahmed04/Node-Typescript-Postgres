@@ -4,9 +4,9 @@ import {
   loginUser,
   logoutUser,
 } from "../controllers/authController";
-import {userValidationSchemas} from "../validation/user.validation"
+import { userValidationSchemas } from "../validation/user.validation"
 import Joi from "joi";
-import User from "../models/userModels";
+import User from "../../models/User";
 // const loginValidation = Joi.object({
 //   email: Joi.string().email().required().description("User email address"),
 //   password: Joi.string().required().description("User password"),
