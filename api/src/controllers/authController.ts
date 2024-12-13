@@ -1,15 +1,19 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import User from "../../models/User";
-// // import { RedisClientType } from 'redis'; // Assuming you're using Redis for token storage
+// src/controllers/userController.ts
 
-// Mock Redis client or use your implementation
-// const redisClient: RedisClientType = {} as RedisClientType;
-export const registerUser = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
+import { FastifyRequest, FastifyReply } from 'fastify';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../../models/User';
+import { UserSession } from "../../models/userSessionModel";
+import { successResponse, errorResponse } from '../helper/responseHelpers';
+import dotenv from "dotenv";
+dotenv.config();
+export interface LoginRequestBody {
+  email: string;
+  password: string;
+}
+
+export const registerUser = async (request: FastifyRequest, reply: FastifyReply) => {
   const { username, email, password } = request.body as {
     username: string;
     email: string;
@@ -17,9 +21,7 @@ export const registerUser = async (
   };
 
   if (!username || !email || !password) {
-    return reply
-      .status(400)
-      .send({ error: "Username, email, and password are required." });
+    return reply.status(400).send(errorResponse("Username, email, and password are required.", 400));
   }
 
   try {
@@ -30,10 +32,10 @@ export const registerUser = async (
     });
 
     if (existingUser) {
-      return reply.status(400).send({ error: "Email already in use." });
+      return reply.status(400).send(errorResponse("Email already in use.", 400));
     }
 
-    //  const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     console.log("check before creating new user");
 
@@ -43,52 +45,72 @@ export const registerUser = async (
       password,
     });
 
-    reply
-      .status(201)
-      .send({ message: "User registered successfully!", user: newUser });
+    return reply.status(201).send(successResponse("User registered successfully!", newUser, 201));
   } catch (error) {
     console.error("Error registering user:", error);
-    reply.status(500).send({ error: "Internal server error." });
+    return reply.status(500).send(errorResponse("Internal server error.", 500));
   }
 };
-export const loginUser = async (email: string, password: string) => {
+
+
+
+
+
+
+
+export const loginUser = async (request: FastifyRequest, reply: FastifyReply) => {
+  const { email, password } = request.body as {
+    email: string;
+    password: string;
+  };
+
   try {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return { success: false, error: "User not found" };
+      return reply.status(404).send(errorResponse("User not found", 404));
     }
 
+   
     // const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    //  if (!isPasswordValid) {
-    // return { success: false, error: "Invalid password" };
+    // if (!isPasswordValid) {
+    //   return reply.status(401).send(errorResponse("Invalid password", 401));
     // }
 
+
+    await UserSession.destroy({
+      where: { user_id: user.dataValues.user_id },
+    });
+
+   
     const token = jwt.sign(
-      { id: user.id },
+      { user_id: user.dataValues.user_id },
       process.env.JWT_SECRET || "secret",
       { expiresIn: "1h" }
     );
 
-    return { success: true, token };
+ 
+    await UserSession.create({ user_id: user.dataValues.user_id, token });
+
+    return reply.status(200).send(successResponse("Login successful", { token }, 200));
   } catch (error) {
     console.error("Error during login:", error);
-    return { success: false, error: "Failed to log in." };
+    return reply.status(500).send(errorResponse("Internal server error.", 500));
   }
 };
 
 export async function logoutUser(token: string): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log("Received token:", token);
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    await UserSession.destroy({ where: { token } });
 
-    if (!decoded) {
-      return { success: false, error: 'Invalid or expired token.' };
-    }
-
+    console.log("Session deleted successfully for token:", token);
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Invalid or expired token.' };
+    console.error("Error during logout:", error);
+    return { success: false, error: "Invalid or expired token." };
   }
 }
+
+

@@ -33,7 +33,7 @@ export const userValidationSchemas = {
   }),
 
   // Validation schema for user login
-  loginUser: Joi.object({
+   loginUser: Joi.object({
     email: Joi.string()
       .email()
       .required()
@@ -52,5 +52,12 @@ export const userValidationSchemas = {
         "string.min": "Password must be at least 6 characters long.",
         "any.required": "Password is required.",
       }),
-  }),
+    // user_id: Joi.number()
+    //   .required()
+    //   .messages({
+    //     "number.base": "User ID must be a number.",
+    //     "any.required": "User ID is required.",
+    //   }),
+  })
+  
 };

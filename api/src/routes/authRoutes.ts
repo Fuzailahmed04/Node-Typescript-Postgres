@@ -3,14 +3,14 @@ import {
   registerUser,
   loginUser,
   logoutUser,
+  LoginRequestBody,
 } from "../controllers/authController";
-import { userValidationSchemas } from "../validation/user.validation"
+import { userValidationSchemas } from "../validation/user.validation";
 import Joi from "joi";
 import User from "../../models/User";
-// const loginValidation = Joi.object({
-//   email: Joi.string().email().required().description("User email address"),
-//   password: Joi.string().required().description("User password"),
-// }).options({ abortEarly: false });
+import { authMiddleware } from "../middlewares/authMiddleware";
+import { successResponse, errorResponse } from '../helper/responseHelpers'; // Importing response helpers
+
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.route({
     method: "POST",
@@ -18,50 +18,45 @@ export default async function userRoutes(fastify: FastifyInstance) {
     preHandler: async (request: FastifyRequest, reply: FastifyReply) => {
       const { error } = userValidationSchemas.registerUserValidation.validate(request.body);
       if (error) {
-        return reply.status(400).send({ error: error.details[0].message });
+        return reply.status(400).send(errorResponse(error.details[0].message, 400));
       }
 
       const { email } = request.body as { email: string };
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
-        return reply.status(400).send({ error: "Email already exists!" });
+        return reply.status(400).send(errorResponse("Email already exists!", 400));
       }
     },
     handler: async (request, reply) => {
-      return registerUser(request, reply);
+      try {
+        const result = await registerUser(request, reply);
+        return reply.status(201).send(successResponse("User registered successfully!", result, 201));
+      } catch (error) {
+        return reply.status(500).send(errorResponse("Internal server error.", 500));
+      }
     },
   });
 
   fastify.route({
     method: "POST",
     url: "/login",
-    schema: {
-      body: {
-        type: "object",
-        properties: {
-          email: { type: "string", format: "email" },
-          password: { type: "string", minLength: 6 },
-        },
-        required: ["email", "password"],
-      },
-    },
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
-      const { email, password } = request.body as {
-        email: string;
-        password: string;
-      };
+      const { error } = userValidationSchemas.loginUser.validate(request.body);
+      if (error) {
+        return reply.status(400).send(errorResponse(error.details[0].message, 400));
+      }
+      const { email, password } = request.body as { email: string, password: string };
 
       if (!email || !password) {
-        return reply
-          .status(400)
-          .send({ error: "Email and password are required." });
+        return reply.status(400).send(errorResponse("Email and password are required.", 400));
       }
-
+     
+      const body: LoginRequestBody = { email: email, password: password };
       try {
-        const result = await loginUser(email, password);
-        return reply.status(200).send(result);
+        const result = await loginUser(request, reply);
+        return reply.status(200).send(successResponse("Login successful", result, 200));
       } catch (err) {
-        return reply.status(401).send({ error: "Invalid email or password" });
+        return reply.status(401).send(errorResponse("Invalid email or password", 401));
       }
     },
   });
@@ -69,26 +64,17 @@ export default async function userRoutes(fastify: FastifyInstance) {
   fastify.route({
     method: "DELETE",
     url: "/logout",
+    preHandler: authMiddleware, 
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers["authorization"];
-
-        if (!authHeader) {
-          return reply
-            .status(401)
-            .send({ error: "No token provided, unauthorized." });
-        }
-
-        const token = authHeader.replace("Bearer ", "");
-
+        const token = (request.headers["authorization"] || "").replace("Bearer ", ""); 
+  
         const result = await logoutUser(token);
-
+  
         if (result.success) {
-          return reply
-            .status(200)
-            .send({ message: "User logged out successfully." });
+          return reply.status(200).send({ message: "User logged out successfully." });
         }
-
+  
         return reply.status(400).send({ error: result.error });
       } catch (error) {
         return reply.status(500).send({ error: "Internal server error." });

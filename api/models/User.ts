@@ -1,23 +1,26 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../src/config/config';
+import { v4 as uuidv4 } from 'uuid'; 
 
 class User extends Model {
-  public id!: number;
+  public user_id!: string; 
+
   public username!: string;
   public email!: string;
   public password!: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
 }
 
 User.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+    user_id: {
+      type: DataTypes.UUID,
+      defaultValue: uuidv4,
       primaryKey: true,
     },
+
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -31,12 +34,14 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+
   },
   {
-    sequelize, // Pass the Sequelize instance
+    sequelize,
     modelName: 'User',
     tableName: 'users',
     timestamps: true,
+    underscored: true,
   }
 );
 
