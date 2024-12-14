@@ -7,6 +7,6 @@ WORKDIR /api
 COPY ./api .
 RUN npm install
 RUN npm link
+EXPOSE 4001
 
-# Command to run the application
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run dev"]

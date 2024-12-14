@@ -1,24 +1,34 @@
-
-import Fastify from 'fastify'
+import Fastify from 'fastify';
+import sequelizeInit from './config/sequelize-cli';  // Import the Sequelize instance
 import userRoutes from './routes/userRoutes';
 
-
 const fastify = Fastify({
-  logger: true
+  logger: true,
 });
-
 
 fastify.register(userRoutes);
 
-fastify.get('/testing', async ( request: any, reply: any) =>{
-  return{ message : 'Hello Mr Fuzail'};
-}
-);
+const startServer = async () => {
+  try {
+    await sequelizeInit.authenticate(); 
+    console.log('Database connected successfully');
+  } catch (err) {
+    console.error('Error connecting to the database:', err);
+    process.exit(1); 
+  }
 
-fastify.listen({ port: 4001, host: '0.0.0.0' }), (err: any,address: any) =>{
-  if(err){
+  fastify.get('/testing', async (request, reply) => {
+    return { message: 'Hello Mr Fuzail' };
+  });
+
+  // Start the Fastify server
+  try {
+    await fastify.listen({ port: Number(process.env.API_PORT) || 4001, host: '0.0.0.0' });
+    console.log(`Server is running at ${process.env.API_PORT}`);
+  } catch (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-  console.log(`Server is runnning at the ${ address}`);
 };
+
+startServer();
