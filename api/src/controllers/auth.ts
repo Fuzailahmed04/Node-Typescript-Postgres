@@ -3,8 +3,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 // import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from '../../models/User';
-import { UserSession } from "../../models/userSessionModel";
+import User from '../models/user';
+import { UserSession } from "../models/session";
 import { successResponse, errorResponse } from '../helper/responseHelpers';
 // import dotenv from "dotenv";
 import { generateOTP } from '../helper/otpGenrate';

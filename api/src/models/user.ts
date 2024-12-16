@@ -1,14 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelizeInit from '../config/sequelize-cli';
+import sequelizeInit from 'src/config/sequelize-cli';
+import sequelizeInits from 'src/config/sequelize-cli';
 import { v4 as uuidv4 } from 'uuid';
 
 class User extends Model {
   public user_id!: string;
-  public select_region!: string; 
+  public select_region!: string;
   public first_name!: string;
   public last_name!: string;
   public date_of_birth!: Date;
-  public phone_number!: string; 
+  public phone_number!: string;
   public email!: string;
   public password!: string;
 
@@ -27,7 +28,7 @@ User.init(
       type: DataTypes.STRING,
 
       allowNull: false,
-     
+
     },
     first_name: {
       type: DataTypes.STRING,
@@ -77,7 +78,7 @@ User.init(
     modelName: 'User',
     tableName: 'users',
     timestamps: true,
-    underscored: true, 
+    underscored: true,
   }
 );
 

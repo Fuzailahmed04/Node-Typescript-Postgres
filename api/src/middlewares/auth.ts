@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { UserSession } from "../../models/userSessionModel";
+import { UserSession } from "../models/session";
 import { errorResponse } from "../helper/responseHelpers"; 
 
 dotenv.config();

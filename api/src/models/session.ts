@@ -3,7 +3,9 @@ import sequelizeInit from '../config/sequelize-cli';
 import User from './user';
 import { v4 as uuidv4 } from 'uuid';
 
+
 export class UserSession extends Model {
+
   declare id: string;
   declare user_id: number;
   declare token: string;

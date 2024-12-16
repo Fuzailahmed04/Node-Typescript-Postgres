@@ -7,7 +7,7 @@ import {
   sendOtp,
 } from "../controllers/authController";
 import { userValidationSchemas } from "../validation/userValidation";
-import User from "../../models/User";
+import User from "../models/user";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { successResponse, errorResponse } from '../helper/responseHelpers'; // Importing response helpers
 

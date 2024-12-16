@@ -1,9 +1,9 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { loginUser,addUser,logoutUser} from "../controllers/userController";
+import { loginUser,addUser,logoutUser} from "../controllers/user";
 import { userValidationSchemas } from "../validation/userValidation";
 import User from "../models/user";
 import { userMiddleware } from "../middlewares/userMiddleware";
-import { successmsg, errormsg } from "../handlers/responseHandlers"; 
+import { successmsg, errormsg } from "../handlers/response"; 
 import { sendOTPEmail, generateOTP } from "../utils/otpUtils";
 export default async function userRoutes(fastify: FastifyInstance) {
 

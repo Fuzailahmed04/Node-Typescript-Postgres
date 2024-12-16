@@ -2,9 +2,9 @@
 
 import { Model, DataTypes } from 'sequelize';
 // import { sequelize } from '../src/config/config';
-import User from './User';
+import User from '../models/user';
 import { v4 as uuidv4 } from 'uuid';
-import sequelizeInit from "../src/config/sequelize-cli"
+import sequelizeInit from "../config/sequelize-cli"
 
 class App extends Model {
     declare id: string;

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
-import UserSession from "../models/sessionUser";
+import UserSession from "../models/session";
 
 
 declare module "fastify" {
