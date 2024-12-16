@@ -5,10 +5,10 @@ import {
   logoutUser,
   LoginRequestBody,
   sendOtp,
-} from "../controllers/authController";
+} from "../controllers/auth";
 import { userValidationSchemas } from "../validation/userValidation";
 import User from "../models/user";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware } from "../middlewares/auth";
 import { successResponse, errorResponse } from '../helper/responseHelpers'; // Importing response helpers
 
 export default async function userRoutes(fastify: FastifyInstance) {

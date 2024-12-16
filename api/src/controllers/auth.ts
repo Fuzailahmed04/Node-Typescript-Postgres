@@ -8,7 +8,7 @@ import { UserSession } from "../models/session";
 import { successResponse, errorResponse } from '../helper/responseHelpers';
 // import dotenv from "dotenv";
 import { generateOTP } from '../helper/otpGenrate';
-import { otpStore, sendEmail } from '../middlewares/emailservice';
+import { otpStore, sendEmail } from '../middlewares/email';
 // dotenv.config();
 export interface LoginRequestBody {
   email: string;

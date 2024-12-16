@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import sequelizeInit from './config/sequelize-cli';  // Import the Sequelize instance
-import authRoute from "./routes/authRoutes"
+import authRoute from "./routes/auth"
 
 const fastify = Fastify({
   logger: true,
