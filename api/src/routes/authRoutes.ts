@@ -4,9 +4,9 @@ import {
   loginUser,
   logoutUser,
   LoginRequestBody,
+  sendOtp,
 } from "../controllers/authController";
 import { userValidationSchemas } from "../validation/user.validation";
-import Joi from "joi";
 import User from "../../models/User";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { successResponse, errorResponse } from '../helper/responseHelpers'; // Importing response helpers
@@ -36,15 +36,14 @@ export default async function userRoutes(fastify: FastifyInstance) {
       }
     },
   });
-
   fastify.route({
     method: "POST",
     url: "/login",
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
-      const { error } = userValidationSchemas.loginUser.validate(request.body);
-      if (error) {
-        return reply.status(400).send(errorResponse(error.details[0].message, 400));
-      }
+      // const { error } = userValidationSchemas.loginUser.validate(request.body);
+      // if (error) {
+      //   return reply.status(400).send(errorResponse(error.details[0].message, 400));
+      // }
       const { email, password } = request.body as { email: string, password: string };
 
       if (!email || !password) {
@@ -60,7 +59,11 @@ export default async function userRoutes(fastify: FastifyInstance) {
       }
     },
   });
-
+  fastify.route({
+    method: "POST",
+    url: "/send-otp",
+    handler: sendOtp,
+  });
   fastify.route({
     method: "DELETE",
     url: "/logout",

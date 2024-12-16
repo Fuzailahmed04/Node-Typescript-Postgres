@@ -3,9 +3,9 @@ import { sequelize } from '../src/config/config';
 import User from './User';
 import { v4 as uuidv4 } from 'uuid';
 
-// Define the UserSession model without declaring public fields
+
 export class UserSession extends Model {
-  // You can use the 'declare' keyword for model attributes without initializing them
+
   declare id: string;
   declare user_id: number;
   declare token: string;
@@ -42,7 +42,6 @@ UserSession.init(
   }
 );
 
-// Define relationships
 UserSession.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasMany(UserSession, { foreignKey: 'user_id', as: 'sessions' });
 
