@@ -1,12 +1,12 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
-  registerUser,
+  addUser,
   loginUser,
   logoutUser,
   LoginRequestBody,
   sendOtp,
 } from "../controllers/authController";
-import { userValidationSchemas } from "../validation/user.validation";
+import { userValidationSchemas } from "../validation/userValidation";
 import User from "../../models/User";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { successResponse, errorResponse } from '../helper/responseHelpers'; // Importing response helpers
@@ -14,7 +14,7 @@ import { successResponse, errorResponse } from '../helper/responseHelpers'; // I
 export default async function userRoutes(fastify: FastifyInstance) {
   fastify.route({
     method: "POST",
-    url: "/register",
+    url: "/signup",
     preHandler: async (request: FastifyRequest, reply: FastifyReply) => {
       const { error } = userValidationSchemas.registerUserValidation.validate(request.body);
       if (error) {
@@ -29,13 +29,15 @@ export default async function userRoutes(fastify: FastifyInstance) {
     },
     handler: async (request, reply) => {
       try {
-        const result = await registerUser(request, reply);
+        const result = await addUser(request, reply);
         return reply.status(201).send(successResponse("User registered successfully!", result, 201));
       } catch (error) {
+        console.error("Error during signup:", error);
         return reply.status(500).send(errorResponse("Internal server error.", 500));
       }
     },
   });
+
   fastify.route({
     method: "POST",
     url: "/login",
@@ -49,7 +51,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
       if (!email || !password) {
         return reply.status(400).send(errorResponse("Email and password are required.", 400));
       }
-     
+
       const body: LoginRequestBody = { email: email, password: password };
       try {
         const result = await loginUser(request, reply);
@@ -67,17 +69,17 @@ export default async function userRoutes(fastify: FastifyInstance) {
   fastify.route({
     method: "DELETE",
     url: "/logout",
-    preHandler: authMiddleware, 
+    preHandler: authMiddleware,
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const token = (request.headers["authorization"] || "").replace("Bearer ", ""); 
-  
+        const token = (request.headers["authorization"] || "").replace("Bearer ", "");
+
         const result = await logoutUser(token);
-  
+
         if (result.success) {
           return reply.status(200).send({ message: "User logged out successfully." });
         }
-  
+
         return reply.status(400).send({ error: result.error });
       } catch (error) {
         return reply.status(500).send({ error: "Internal server error." });
