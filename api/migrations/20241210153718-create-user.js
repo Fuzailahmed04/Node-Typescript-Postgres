@@ -2,16 +2,31 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
-    
     await queryInterface.createTable('users', {
       user_id: {
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        defaultValue: Sequelize.fn('gen_random_uuid'), 
         allowNull: false,
       },
-      username: {
+      select_region: {
+        type: Sequelize.STRING,
+
+        allowNull: false,
+      },
+      first_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      last_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      date_of_birth: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+      phone_number: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -23,14 +38,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      push_notification_token: {
-        type: Sequelize.STRING, 
-        allowNull: true, 
-      },
-      device_type: {
-        type: Sequelize.ENUM('iOS', 'Android', 'Web'), 
-        allowNull: true, 
       },
       created_at: {
         type: Sequelize.DATE,
@@ -47,5 +54,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('users');
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_users_select_region";');
   },
 };
