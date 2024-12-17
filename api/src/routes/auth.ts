@@ -5,6 +5,7 @@ import {
   logoutUser,
   LoginRequestBody,
   sendOtp,
+  verifyOtp,
 } from "../controllers/auth";
 import { userValidationSchemas } from "../validation/userValidation";
 import User from "../models/user";
@@ -46,11 +47,11 @@ export default async function userRoutes(fastify: FastifyInstance) {
       if (error) {
         return reply.status(400).send(errorResponse(error.details[0].message, 400));
       }
-      const { email, password, otp } = request.body as { email: string, password: string , otp:string };
+      const { email, password } = request.body as { email: string, password: string  };
       if (!email || !password) {
         return reply.status(400).send(errorResponse("Email and password are required.", 400));
       }
-      const body: LoginRequestBody = { email: email, password: password,  otp : otp };
+      const body: LoginRequestBody = { email: email, password: password};
       try {
         const result = await loginUser(request, reply);
         return reply.status(200).send(successResponse("Login successful", result, 200));
@@ -63,6 +64,12 @@ export default async function userRoutes(fastify: FastifyInstance) {
     method: "POST",
     url: "/send-otp",
     handler: sendOtp,
+  });
+
+  fastify.route({
+    method: "POST",
+    url: "/verify-otp",
+    handler: verifyOtp,
   });
   fastify.route({
     method: "DELETE",
