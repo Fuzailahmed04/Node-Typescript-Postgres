@@ -1,33 +1,15 @@
-// src/controllers/userController.ts
-
 import { FastifyRequest, FastifyReply } from 'fastify';
-// import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
-import { UserSession } from "../models/session";
-import { successResponse, errorResponse } from '../helper/responseHelpers';
-// import dotenv from "dotenv";
-import { generateOTP } from '../helper/otpGenrate';
+import { session } from "../models/session";
+import { successResponse, errorResponse } from '../helper/responses';
+import { generateOTP } from '../utils/otpUtils';
 import { otpStore, sendEmail } from '../middlewares/email';
-// dotenv.config();
 export interface LoginRequestBody {
   email: string;
   password: string;
 }
 
-
-// const successResponse = (message: string, data: unknown, statusCode = 200) => ({
-//   success: true,
-//   message,
-//   data,
-//   statusCode,
-// });
-
-// const errorResponse = (message: string, statusCode = 500) => ({
-//   success: false,
-//   message,
-//   statusCode,
-// });
 import argon2 from 'argon2';
 
 export const addUser = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -147,7 +129,7 @@ export const loginUser = async (request: FastifyRequest, reply: FastifyReply) =>
       { expiresIn: "1h" }
     );
 
-    await UserSession.create({ user_id: user.dataValues.user_id, token });
+    await session.create({ user_id: user.dataValues.user_id, token });
 
 
     const userProfile = {
@@ -169,7 +151,7 @@ export async function logoutUser(token: string): Promise<{ success: boolean; err
   try {
     console.log("Received token:", token);
 
-    await UserSession.destroy({ where: { token } });
+    await session.destroy({ where: { token } });
 
     console.log("Session deleted successfully for token:", token);
     return { success: true };

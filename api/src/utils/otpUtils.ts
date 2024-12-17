@@ -1,7 +1,5 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
 
-dotenv.config();
 
 const GMAIL_FROM = process.env.GMAIL_FROM || "sabahatlaitf126@gmail.com";
 const GMAIL_PASS = process.env.GMAIL_PASS ||"dwuw iqiw fqhk gzwh";

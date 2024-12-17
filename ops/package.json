@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "docker": "^1.0.0",
     "env-cmd": "^10.1.0"
   },

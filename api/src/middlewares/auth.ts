@@ -1,10 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import { UserSession } from "../models/session";
-import { errorResponse } from "../helper/responseHelpers"; 
-
-dotenv.config();
+import { errorResponse } from "../helper/responses"; 
+import session from "../models/session";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -35,12 +32,12 @@ export const authMiddleware = async (request: FastifyRequest, reply: FastifyRepl
       return reply.status(401).send(errorResponse("Invalid token payload.", 401));
     }
 
-    const session = new UserSession(decoded.user_id, token);
+    const sessiontoken = new session(decoded.user_id, token);
     console.log("decodeid", decoded.user_id);
     console.log("my token", token);
 
-    if (!session) {
-      return reply.status(401).send(errorResponse("Session not found or expired.", 401));
+    if (!sessiontoken) {
+      return reply.status(401).send(errorResponse("sessiontoken not found or expired.", 401));
     }
 
     console.log("jwttoken", process.env.JWT_SECRET);
@@ -52,7 +49,7 @@ export const authMiddleware = async (request: FastifyRequest, reply: FastifyRepl
     });
 
   
-    request.user = session.user_id;
+    request.user = sessiontoken.user_id;
 
   } catch (error) {
     console.error("Error in authMiddleware:", error);

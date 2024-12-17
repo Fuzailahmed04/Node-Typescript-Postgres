@@ -1,10 +1,9 @@
 'use strict';
 
 import { Model, DataTypes } from 'sequelize';
-// import { sequelize } from '../src/config/config';
 import User from '../models/user';
 import { v4 as uuidv4 } from 'uuid';
-import sequelizeInit from "../config/sequelize-cli"
+import sequelizeInit from "../config/sequelize"
 
 class App extends Model {
     declare id: string;

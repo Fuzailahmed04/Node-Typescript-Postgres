@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import sequelizeInit from './config/sequelize-cli';  // Import the Sequelize instance
+import sequelizeInit from './config/sequelize'; 
 import authRoute from "./routes/auth"
 
 const fastify = Fastify({
@@ -21,7 +21,6 @@ const startServer = async () => {
     return { message: 'Hello Sabahat' };
   });
 
-  // Start the Fastify server
   try {
     await fastify.listen({ port: Number(process.env.API_PORT) || 4001, host: '0.0.0.0' });
     console.log(`Server is running at ${process.env.API_PORT}`);

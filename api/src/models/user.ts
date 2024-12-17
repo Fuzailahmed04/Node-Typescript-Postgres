@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelizeInit from 'src/config/sequelize-cli';
-import sequelizeInits from 'src/config/sequelize-cli';
+import sequelizeInit from '../config/sequelize';
 import { v4 as uuidv4 } from 'uuid';
 
 class User extends Model {

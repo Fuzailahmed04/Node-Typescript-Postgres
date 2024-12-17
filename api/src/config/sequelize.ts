@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-
+import logger from '../utils/logger';
 const sequelizeInit = new Sequelize(
   process.env.DATABASE_NAME as string,      
   process.env.DATABASE_USER as string,     
@@ -7,7 +7,7 @@ const sequelizeInit = new Sequelize(
   {
     host: process.env.DATABASE_HOST as string, 
     dialect: 'postgres',                      
-    logging: false,                            
+    logging: (msg) => logger.info(msg), 
   }
 );
 
