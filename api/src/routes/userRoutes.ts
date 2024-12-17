@@ -4,7 +4,6 @@ import { userValidationSchemas } from "../validation/userValidation";
 import User from "../models/user";
 import { userMiddleware } from "../middlewares/userMiddleware";
 import { successmsg, errormsg } from "../handlers/responseHandlers"; 
-import { sendOTPEmail, generateOTP } from "../utils/otpUtils";
 export default async function userRoutes(fastify: FastifyInstance) {
 
 

@@ -11,7 +11,6 @@ module.exports = {
       },
       select_region: {
         type: Sequelize.STRING,
-
         allowNull: false,
       },
       first_name: {

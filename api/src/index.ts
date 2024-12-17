@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import sequelizeInit from './config/sequelize-cli';  // Import the Sequelize instance
+import sequelizeInit from './config/sequelize-cli';
 import userRoutes from './routes/userRoutes';
 
 const fastify = Fastify({

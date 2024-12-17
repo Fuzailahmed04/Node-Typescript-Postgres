@@ -25,7 +25,6 @@ User.init(
     },
     select_region: {
       type: DataTypes.STRING,
-
       allowNull: false,
      
     },
