@@ -8,6 +8,7 @@ import { otpStore, sendEmail } from '../middlewares/email';
 export interface LoginRequestBody {
   email: string;
   password: string;
+  otp:string
 }
 
 import argon2 from 'argon2';
@@ -115,7 +116,7 @@ export const loginUser = async (request: FastifyRequest, reply: FastifyReply) =>
       return reply.status(400).send(errorResponse("Invalid or expired OTP.", 400));
     }
 
-    console.log("otp Store", otpStore);
+    console.log("otp Store 111", otpStore);
     delete otpStore[email];
 
     const user = await User.findOne({ where: { email } });

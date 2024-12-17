@@ -84,6 +84,7 @@ export const userValidationSchemas = {
         "string.min": "Password must be at least 6 characters long.",
         "any.required": "Password is required.",
       }),
+      otp: Joi.string().length(6).optional() 
   }),
 
   verifyOtp: Joi.object({
