@@ -36,7 +36,7 @@ session.init(
   },
   {
     sequelize: sequelizeInit,
-    modelName: 'UserSession',
+    modelName: 'session',
     tableName: 'user_sessions',
     timestamps: true,
     underscored: true,

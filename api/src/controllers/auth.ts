@@ -62,6 +62,7 @@ export const addUser = async (request: FastifyRequest, reply: FastifyReply) => {
       email,
       password: hashedPassword,
     });
+    delete newUser.dataValues.password;
 
     return reply
       .status(201)
@@ -99,7 +100,16 @@ export const loginUser = async (request: FastifyRequest, reply: FastifyReply) =>
       { expiresIn: "1h" }
     );
 
-    await session.create({ user_id: user.dataValues.user_id, token });
+    const existingSession = await session.findOne({ where: { user_id: user.dataValues.user_id } });
+
+    if (existingSession) {
+      await session.update(
+        { token }, 
+        { where: { user_id: user.dataValues.user_id } }
+      );
+    } else {
+      await session.create({ user_id: user.dataValues.user_id, token });
+    }
 
     const otpResponse = await sendOtp(request, reply);
 
