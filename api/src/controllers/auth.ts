@@ -120,8 +120,12 @@ export const loginUser = async (request: FastifyRequest, reply: FastifyReply) =>
     const userProfile = {
       user_id: user.dataValues.user_id,
       email: user.dataValues.email,
-      username: user.dataValues.username,
-    };
+      select_region:user.dataValues.select_region,
+      first_name:user.dataValues.first_name,
+      last_name:user.dataValues.last_name,
+      date_of_birth:user.dataValues.date_of_birth,
+      phone_number:user.dataValues.phone_number,
+      };
 
     return reply
       .status(200)
