@@ -8,7 +8,7 @@ class RentalDetails extends Model {
   public street_address!: string;
   public appartment!: string;
   public rent_amount!: string;
-  public due_date!: Date;
+  public due_date!: string;
   public month_to_month!: boolean;
   public lease_start_date!: Date;
   public lease_end_date!: Date;
@@ -20,8 +20,6 @@ class RentalDetails extends Model {
   static associate(models: any) {
   }
 }
-
-export default (sequelize: Sequelize): typeof RentalDetails => {
   RentalDetails.init(
     {
       rental_id: {
@@ -47,7 +45,7 @@ export default (sequelize: Sequelize): typeof RentalDetails => {
         allowNull: false,
       },
       due_date: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       month_to_month: {
@@ -74,16 +72,25 @@ export default (sequelize: Sequelize): typeof RentalDetails => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        field: 'created_at'
+       },
+      
+      updatedAt: {
+        type: DataTypes.DATE,
+        field: 'updated_at'
+      },
      
     },
     {
       sequelize:sequelizeInit,
       modelName: "RentalDetails",
       tableName: "rental_details",
-      timestamps: true,
    
     }
   );
 
-  return RentalDetails;
-};
+
+
+export default RentalDetails;

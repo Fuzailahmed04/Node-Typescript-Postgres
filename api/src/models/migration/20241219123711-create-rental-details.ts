@@ -2,9 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-
     await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
-
 
     await queryInterface.createTable('rental_details', {
       rental_id: {
@@ -21,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      appartment: {
+      appartment: { 
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -30,7 +28,7 @@ module.exports = {
         allowNull: false,
       },
       due_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       month_to_month: {
@@ -70,7 +68,8 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
+    // Drop the "rental_details" table
     await queryInterface.dropTable('rental_details');
   },
 };
